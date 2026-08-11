@@ -1,1 +1,3 @@
-# placement_prep
+# Placement Prep
+
+A small repository of placement preparation notes.
