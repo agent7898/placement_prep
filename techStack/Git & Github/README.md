@@ -9,7 +9,7 @@ A comprehensive, interview-focused study guide and reference for **Git (CLI & In
 
 ## Curriculum & Subtopic Index
 
-This guide is organized into 10 modular sub-topics, each containing in-depth explanations, practical CLI commands, real-world examples, and a dedicated checklist:
+This guide is organized into 15 modular sub-topics, each containing in-depth explanations, practical CLI commands, real-world examples, and a dedicated checklist:
 
 | # | Subtopic | Topic Guide | Practice Checklist | Key Focus |
 |---|---|---|---|---|
@@ -23,6 +23,11 @@ This guide is organized into 10 modular sub-topics, each containing in-depth exp
 | **08** | **Git Tags & Releases** | [Guide](08-git-tags-and-releases/README.md) | [Checklist](08-git-tags-and-releases/checklist.md) | Semantic versioning, annotated tags (`git tag -a`), lightweight tags, `git push origin --tags`. |
 | **09** | **Branching & Navigation** | [Guide](09-git-branching-and-navigation/README.md) | [Checklist](09-git-branching-and-navigation/checklist.md) | Experimental branches, `git switch -c` vs `git checkout -b`, pointer DAG internals, working tree swapping. |
 | **10** | **Merging & Synchronization** | [Guide](10-merging-and-synchronization/README.md) | [Checklist](10-merging-and-synchronization/checklist.md) | 5-step merge flow, pulling before merging, Fast-Forward vs 3-way merge, conflict anatomy & `git merge --abort`. |
+| **11** | **Advanced Merging & Conflict Resolution** | [Guide](11-advanced-merging-and-conflict-resolution/README.md) | [Checklist](11-advanced-merging-and-conflict-resolution/checklist.md) | 3-way merge base (`git merge-base`), merge strategies (`ort`, `ours`, `theirs`), binary conflicts, `git rerere`. |
+| **12** | **Git Rebase & History Rewriting** | [Guide](12-git-rebase-and-history-rewriting/README.md) | [Checklist](12-git-rebase-and-history-rewriting/checklist.md) | Linear DAG, Golden Rule of Rebase, Interactive Rebase (`-i`), fixup & autosquash, `rebase --onto`, `--force-with-lease`. |
+| **13** | **Git Protocols & Network Transfers** | [Guide](13-git-protocols-and-network-transfers/README.md) | [Checklist](13-git-protocols-and-network-transfers/checklist.md) | Local/HTTPS/SSH/Git protocols, Smart vs Dumb HTTP, Git Wire Protocol v2, Ed25519, PATs, blobless & shallow clones. |
+| **14** | **GitHub Collaboration & Workflows** | [Guide](14-github-collaboration-and-workflows/README.md) | [Checklist](14-github-collaboration-and-workflows/checklist.md) | Fork & PR model, GitHub Flow vs Gitflow vs Trunk-Based, upstream sync, squash vs merge vs rebase PRs, `CODEOWNERS`. |
+| **15** | **Advanced Git Tooling & Internals** | [Guide](15-advanced-git-tooling-and-internals/README.md) | [Checklist](15-advanced-git-tooling-and-internals/checklist.md) | Advanced stash, `reflog` recovery, `cherry-pick`, binary search `bisect`, `worktree`, Git hooks, `git gc`, packfiles. |
 
 ---
 
@@ -130,7 +135,7 @@ Working Directory → Hash SHA-1/SHA-256 → Git Object Database (.git/objects/)
 
 ---
 
-## 5. Rapid Revision Sheet (20 High-Yield Questions)
+## 5. Rapid Revision Sheet (30 High-Yield Questions)
 
 | # | Question | 30-Second Model Answer |
 |---|---|---|
@@ -154,6 +159,16 @@ Working Directory → Hash SHA-1/SHA-256 → Git Object Database (.git/objects/)
 | **18** | What does `git blame` do? | Annotates each line of a file with the author, timestamp, and commit hash of who last modified it. |
 | **19** | What is a Pull Request (PR)? | A GitHub mechanism proposing changes from one branch into another, enabling code review, CI checks, and discussion. |
 | **20** | Why use `git push --force-with-lease` instead of `--force`? | It only force-pushes if no one else has updated the remote branch in the meantime, preventing accidental overwrites. |
+| **21** | What is `git rerere`? | "Reuse Recorded Resolution": caches how you resolved a merge conflict and auto-applies that resolution if the conflict recurs. |
+| **22** | What does `git rebase -i` allow? | Interactive rebasing allows you to reword, squash, fixup, drop, edit, or reorder commits in your branch history. |
+| **23** | Difference between `squash` and `fixup`? | Both melt a commit into the preceding one; `squash` lets you combine messages, while `fixup` discards the current commit's message. |
+| **24** | What is `git rebase --onto`? | Transplants a slice of commits from an old base branch onto an entirely new base branch. |
+| **25** | What is the advantage of Git Wire Protocol v2? | Avoids transferring all refs on connection by allowing filtered ref advertisements and multiplexed command execution. |
+| **26** | Why prefer Ed25519 over RSA for SSH? | Shorter key size (256-bit), significantly faster crypto operations, and resistance to side-channel timing attacks. |
+| **27** | Differentiate GitHub Flow vs Gitflow? | GitHub Flow uses lightweight feature branches straight into `main` with continuous deploy; Gitflow uses long-lived `main`, `develop`, and `release` branches. |
+| **28** | Compare GitHub's 3 PR merge options? | Create merge commit retains individual commits + merge bubble; Squash & merge squashes into 1 commit; Rebase & merge linearizes commits without merge commit. |
+| **29** | What is `git bisect`? | Performs a binary search across commit history to isolate the exact commit that introduced a regression bug. |
+| **30** | What is `git worktree`? | Checks out multiple branches simultaneously into independent directories on disk sharing the same underlying `.git` database. |
 
 ---
 
@@ -167,6 +182,8 @@ echo ".env" >> .gitignore
 git commit --amend --no-edit
 
 # If already pushed: Rotate the secret immediately, then scrub history with git filter-repo.
+git filter-repo --invert-paths --path .env
+git push origin --force --all
 ```
 
 ### Scenario 2: Recovering from Accidental `git reset --hard`
@@ -183,6 +200,33 @@ git switch main
 git cherry-pick <commit-hash-of-fix>
 ```
 
+### Scenario 4: Automated Bug Hunt with `git bisect`
+```bash
+git bisect start
+git bisect bad                 # Current broken commit
+git bisect good v1.4.0         # Last known stable release
+git bisect run npm test        # Automatically locates culprit commit!
+git bisect reset
+```
+
+### Scenario 5: Emergency Production Hotfix Without Context Switching (`git worktree`)
+```bash
+# While in the middle of a big feature, pull hotfix into separate folder:
+git worktree add ../hotfix-dir -b hotfix-urgent main
+# (Fix bug inside ../hotfix-dir, commit, and push)
+git worktree remove ../hotfix-dir
+# (Resume your feature branch instantly with zero stash conflicts)
+```
+
+### Scenario 6: Syncing an Open Source Fork with Upstream
+```bash
+git remote add upstream git@github.com:parent-org/project.git
+git fetch upstream
+git switch main
+git merge upstream/main
+git push origin main
+```
+
 ---
 
 ## 7. Traps That Cost Marks in Interviews
@@ -192,3 +236,8 @@ git cherry-pick <commit-hash-of-fix>
 3. **Explaining `.gitignore` without mentioning tracked files:** Adding an existing file to `.gitignore` does not ignore it until you run `git rm --cached`.
 4. **Blind `git push --force`:** Always use `git push --force-with-lease` in collaborative settings.
 5. **Believing Git stores diffs:** Git stores **snapshots** as SHA-addressed blobs in tree hierarchies, not line-by-line deltas.
+6. **Confusing `-s ours` with `-X ours`:** `-s ours` throws away the incoming branch's changes entirely; `-X ours` performs a normal merge and only selects ours during conflicting lines.
+7. **Rebasing public shared branches:** Violates the Golden Rule of Rebasing, corrupting teammates' local copies.
+8. **Thinking `git rm` purges historical secrets:** Historical commits still contain the credentials; history rewriting (`git filter-repo`) is mandatory.
+9. **Confusing shallow clone (`--depth`) with sparse checkout:** Shallow clone restricts commit depth in time; sparse checkout restricts directory scope on disk.
+10. **Believing `git stash` saves untracked files by default:** You must pass `-u` (`--include-untracked`) or `-a` (`--all`) to capture new or ignored files.

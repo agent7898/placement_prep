@@ -75,10 +75,54 @@ A comprehensive progress tracker for mastering Git (CLI, internals, and architec
   - [ ] Resolve merge conflicts and finalize merges.
   - [ ] Abort conflicting merges safely with `git merge --abort`.
 
+- [ ] **[11. Advanced Merging & Conflict Resolution](11-advanced-merging-and-conflict-resolution/checklist.md)**
+  - [ ] Understand 3-way merge ancestor mechanics and `git merge-base`.
+  - [ ] Differentiate merge strategies (`ort`, `recursive`, `ours`, `octopus`).
+  - [ ] Master `-s ours` vs `-X ours` and whitespace ignoring flags.
+  - [ ] Resolve complex conflicts: content, modify/delete, add/add, and binary files (`--ours`/`--theirs`).
+  - [ ] Configure and master `git rerere` (Reuse Recorded Resolution).
+
+- [ ] **[12. Git Rebase & History Rewriting](12-git-rebase-and-history-rewriting/checklist.md)**
+  - [ ] Understand commit replaying and new SHA hash generation during rebasing.
+  - [ ] Understand why public shared branches must never be rebased (Golden Rule).
+  - [ ] Master interactive rebase (`git rebase -i`): `pick`, `squash`, `fixup`, `drop`, `edit`, `exec`.
+  - [ ] Automate clean history with `git commit --fixup` and `git rebase -i --autosquash`.
+  - [ ] Transplant branches with `git rebase --onto`.
+  - [ ] Resolve rebase conflicts (`--continue`, `--skip`, `--abort`).
+  - [ ] Force push safely with `git push --force-with-lease`.
+
+- [ ] **[13. Git Protocols & Network Transfers](13-git-protocols-and-network-transfers/checklist.md)**
+  - [ ] Compare Git's 4 transfer protocols: Local, Smart HTTPS, SSH, and Git protocol.
+  - [ ] Understand Git Wire Protocol v2 improvements over Protocol v1.
+  - [ ] Generate and authenticate using Ed25519 SSH keys.
+  - [ ] Configure GitHub Personal Access Tokens (Classic vs Fine-Grained) and credential helpers.
+  - [ ] Master clone optimizations: Shallow (`--depth`), Blobless (`--filter=blob:none`), Treeless, and Sparse Checkout.
+
+- [ ] **[14. GitHub Collaboration & Workflows](14-github-collaboration-and-workflows/checklist.md)**
+  - [ ] Compare the Shared Repository Model vs the Fork & PR Model.
+  - [ ] Master industry branching strategies: GitHub Flow, Gitflow, Trunk-Based Development.
+  - [ ] Synchronize forked repositories with upstream remotes (`git remote add upstream`).
+  - [ ] Differentiate GitHub PR merge methods: Merge Commit vs Squash & Merge vs Rebase & Merge.
+  - [ ] Configure branch protection rules and GitHub rulesets.
+  - [ ] Automate review routing using `.github/CODEOWNERS`.
+
+- [ ] **[15. Advanced Git Tooling & Internals](15-advanced-git-tooling-and-internals/checklist.md)**
+  - [ ] Master advanced stashing (`-u`, `-a`, `--keep-index`, `stash branch`).
+  - [ ] Recover lost commits and deleted branches using `git reflog`.
+  - [ ] Cherry-pick commits and ranges (`git cherry-pick`).
+  - [ ] Automate bug diagnosis using binary search with `git bisect` and test scripts.
+  - [ ] Work on multiple branches concurrently using `git worktree`.
+  - [ ] Understand client-side and server-side Git hooks and Husky.
+  - [ ] Scrub historical credentials using `git filter-repo`.
+  - [ ] Understand Git database internals: Loose objects vs Packfiles, `git gc`, and `git fsck`.
+
 ---
 
 ## Final Technical Interview Readiness
-- [ ] Answer the Top 20 Rapid Revision Questions in under 30 seconds each.
+- [ ] Answer the Top 30 Rapid Revision Questions in under 30 seconds each.
 - [ ] Articulate the difference between `git merge` and `git rebase` (with the Golden Rule of Rebase).
 - [ ] Articulate the differences between `git reset` (`--soft`, `--mixed`, `--hard`) and `git revert`.
 - [ ] Explain how to recover lost commits using `git reflog`.
+- [ ] Explain how `git bisect` finds regressions with $O(\log N)$ efficiency.
+- [ ] Differentiate between GitHub PR merge methods and explain when to use Squash & Merge.
+- [ ] Explain why `--force-with-lease` is mandatory when pushing rewritten history in teams.
