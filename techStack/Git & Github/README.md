@@ -1,25 +1,28 @@
 # Git & GitHub — Placement Preparation Handbook
 
-A comprehensive, interview-focused study guide and reference for **Git (CLI & Internals)** and **GitHub (Collaboration & Workflows)** for placement assessments, machine coding rounds, and technical interviews.
+A comprehensive, interview-focused study guide and reference for **Git (CLI & Internals)** and **GitHub (Collaboration & Workflows)** designed for placement assessments, machine coding rounds, and technical interviews.
+
+> 📺 **Reference Video Course:** [Git & GitHub Tutorial — Navin Reddy (Telusko)](https://youtu.be/vwj89i2FmG0)  
+> 📋 **Master Module Checklist:** [checklist.md](checklist.md)
 
 ---
 
-## Table of Contents
+## Curriculum & Subtopic Index
 
-1. [Mental Model & Git Architecture](#1-mental-model--git-architecture)
-2. [Git Internals: How Git Stores Data](#2-git-internals-how-git-stores-data)
-3. [The 4 Stages of Git](#3-the-4-stages-of-git)
-4. [Essential Command Reference](#4-essential-command-reference)
-5. [Key Interview Comparisons](#5-key-interview-comparisons)
-   - [Git Merge vs Git Rebase](#git-merge-vs-git-rebase)
-   - [Git Reset vs Git Revert](#git-reset-vs-git-revert)
-   - [Git Fetch vs Git Pull](#git-fetch-vs-git-pull)
-   - [Git Switch & Restore vs Git Checkout](#git-switch--restore-vs-git-checkout)
-6. [Merge Conflicts: Anatomy & Resolution](#6-merge-conflicts-anatomy--resolution)
-7. [GitHub & Collaborative Workflows](#7-github--collaborative-workflows)
-8. [Rapid Revision Sheet (20 High-Yield Questions)](#8-rapid-revision-sheet-20-high-yield-questions)
-9. [Real-World Interview Scenarios & Drills](#9-real-world-interview-scenarios--drills)
-10. [Traps That Cost Marks in Interviews](#10-traps-that-cost-marks-in-interviews)
+This guide is organized into 10 modular sub-topics, each containing in-depth explanations, practical CLI commands, real-world examples, and a dedicated checklist:
+
+| # | Subtopic | Topic Guide | Practice Checklist | Key Focus |
+|---|---|---|---|---|
+| **01** | **VCS Fundamentals & Origin** | [Guide](01-vcs-fundamentals/README.md) | [Checklist](01-vcs-fundamentals/checklist.md) | Manual versioning pain (`quiz-app-1`, `final`), Local vs CVCS vs DVCS, BitKeeper dispute & Linus Torvalds. |
+| **02** | **Installation & Config** | [Guide](02-installation-and-config/README.md) | [Checklist](02-installation-and-config/checklist.md) | Git installation, PowerShell/CMD/Git Bash, author identity, `init.defaultBranch main`, config precedence. |
+| **03** | **Git Architecture & Areas** | [Guide](03-git-architecture-and-areas/README.md) | [Checklist](03-git-architecture-and-areas/checklist.md) | Working Directory vs `.git` folder, Staging Area (Index), Local Repo, `git init -b main`, `git status`. |
+| **04** | **Staging & Committing** | [Guide](04-staging-and-committing/README.md) | [Checklist](04-staging-and-committing/checklist.md) | `git add`, `git commit -m`, `commit -am`, SHA-1 checksum integrity (40 chars vs 7 chars), `git log`. |
+| **05** | **Inspecting Changes & Diffs** | [Guide](05-inspecting-changes-and-diffs/README.md) | [Checklist](05-inspecting-changes-and-diffs/checklist.md) | `git diff` vs `git diff --staged`, reading unified diff syntax, `git log --oneline`, pager navigation (`q`). |
+| **06** | **Untracking & Removing Files** | [Guide](06-untracking-and-removing-files/README.md) | [Checklist](06-untracking-and-removing-files/checklist.md) | Sensitive credentials leak scenario, `git rm --cached`, deleting vs untracking, `.gitignore` rules. |
+| **07** | **Remote Repos & GitHub** | [Guide](07-remote-repositories-and-github/README.md) | [Checklist](07-remote-repositories-and-github/checklist.md) | GitHub/GitLab/Bitbucket, SSH key setup (`ssh-keygen`), `git remote add origin`, `git push -u origin main`. |
+| **08** | **Git Tags & Releases** | [Guide](08-git-tags-and-releases/README.md) | [Checklist](08-git-tags-and-releases/checklist.md) | Semantic versioning, annotated tags (`git tag -a`), lightweight tags, `git push origin --tags`. |
+| **09** | **Branching & Navigation** | [Guide](09-git-branching-and-navigation/README.md) | [Checklist](09-git-branching-and-navigation/checklist.md) | Experimental branches, `git switch -c` vs `git checkout -b`, pointer DAG internals, working tree swapping. |
+| **10** | **Merging & Synchronization** | [Guide](10-merging-and-synchronization/README.md) | [Checklist](10-merging-and-synchronization/checklist.md) | 5-step merge flow, pulling before merging, Fast-Forward vs 3-way merge, conflict anatomy & `git merge --abort`. |
 
 ---
 
@@ -61,12 +64,6 @@ Working Directory → Hash SHA-1/SHA-256 → Git Object Database (.git/objects/)
 4. **Annotated Tag:**
    - A permanent reference pointing to a specific commit, containing tagger metadata and a message.
 
-### Pointers and References
-
-- **Branch:** A lightweight, movable pointer to a specific commit hash (stored in `.git/refs/heads/<branch-name>`). It weighs only 41 bytes (40-char SHA + newline).
-- **`HEAD`:** A pointer to the currently checked-out branch or commit (stored in `.git/HEAD`).
-- **Detached `HEAD` State:** Occurs when `HEAD` points directly to a commit hash rather than a named branch. Any new commits made in this state have no branch reference and will eventually be garbage-collected unless a new branch is created pointing to them.
-
 ---
 
 ## 3. The 4 Stages of Git
@@ -86,130 +83,16 @@ Working Directory → Hash SHA-1/SHA-256 → Git Object Database (.git/objects/)
                                                                           └──────────────────┘
 ```
 
-1. **Working Directory:** The actual local files and directories on your file system that you edit in your IDE.
+1. **Working Directory:** The actual local files and directories on your filesystem that you edit in your IDE.
 2. **Staging Area (Index):** A binary file (`.git/index`) listing files prepared for the next commit. Allows atomic, intentional grouping of changes.
 3. **Local Repository:** The `.git` directory containing your local commit DAG, branches, tags, and object store.
 4. **Remote Repository:** The hosted copy of your repository on a remote server (e.g., GitHub, GitLab, Bitbucket).
 
 ---
 
-## 4. Essential Command Reference
-
-### Repository Setup & Configuration
-
-```bash
-# Set global identity (required on first setup)
-git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
-
-# Initialize a new local repository
-git init
-
-# Clone an existing remote repository
-git clone <remote-url> [optional-folder-name]
-
-# Manage remotes
-git remote -v                          # List configured remotes with URLs
-git remote add origin <remote-url>     # Link local repo to remote named 'origin'
-git remote set-url origin <new-url>    # Update remote URL
-```
-
-### Checking Status, History & Inspection
-
-```bash
-# Check status of working tree and staging area
-git status
-git status -s                          # Short format (?? untracked, M modified, A added)
-
-# View commit history
-git log                                # Full commit log
-git log --oneline                      # Compact single-line summary
-git log --oneline --graph --decorate --all # Beautiful ASCII graph of all branches
-git log -p -2                          # Show patch (code diff) of last 2 commits
-git log --stat                         # Show file change statistics
-
-# Inspect diffs
-git diff                               # Diff between Working Directory and Staging Area
-git diff --staged                      # Diff between Staging Area and HEAD commit
-git diff branchA..branchB              # Diff between tips of two branches
-
-# Inspect specific objects & line history
-git show <commit-hash>                 # Detailed view of a commit and its changes
-git blame <filename>                   # Shows who changed each line and when
-```
-
-### Staging & Committing
-
-```bash
-# Staging changes
-git add <filename>                     # Stage a single file
-git add .                              # Stage all modified and untracked files in directory
-git add -p                             # Interactive patch mode (stage specific hunks)
-
-# Committing
-git commit -m "feat: descriptive message"
-git commit -am "fix: stage tracked files and commit" # Skips explicit 'git add' (tracked only)
-git commit --amend -m "new message"    # Modify the most recent commit (hash changes!)
-```
-
-### Branching & Navigating
-
-```bash
-# Branch management
-git branch                             # List local branches
-git branch -a                          # List local and remote-tracking branches
-git branch <new-branch>                # Create branch without switching
-git branch -d <branch-name>            # Safe delete (only if merged)
-git branch -D <branch-name>            # Force delete unmerged branch
-git branch -m <old-name> <new-name>    # Rename branch
-
-# Switching branches (Modern Git 2.23+)
-git switch <branch-name>               # Switch to existing branch
-git switch -c <new-branch>             # Create and immediately switch to new branch
-
-# Legacy switching (still widely seen in interviews)
-git checkout <branch-name>
-git checkout -b <new-branch>
-```
-
-### Synchronizing with Remote
-
-```bash
-# Fetch updates without modifying working directory
-git fetch origin
-
-# Fetch and merge into current local branch
-git pull origin <branch-name>
-
-# Fetch and rebase current branch onto remote branch
-git pull --rebase origin <branch-name>
-
-# Push local commits to remote
-git push -u origin <branch-name>       # Push and set upstream tracking
-git push                               # Push current tracking branch
-git push --force-with-lease            # Safe force push (checks if remote has changed)
-```
-
-### Stashing (Temporarily Shelving Work)
-
-```bash
-git stash                              # Save uncommitted changes to stash stack
-git stash save "WIP on auth feature"   # Save with custom message
-git stash list                         # View list of saved stashes
-git stash pop                          # Apply newest stash and remove it from list
-git stash apply                        # Apply newest stash but keep it in list
-git stash apply stash@{1}              # Apply specific stash entry
-git stash drop stash@{0}               # Delete specific stash
-git stash clear                        # Wipe all stashes
-```
-
----
-
-## 5. Key Interview Comparisons
+## 4. Key Placement Comparisons & Mental Models
 
 ### Git Merge vs Git Rebase
-
-This is among the **top 3 most asked Git questions** in technical interviews.
 
 | Aspect | `git merge` | `git rebase` |
 |---|---|---|
@@ -218,18 +101,6 @@ This is among the **top 3 most asked Git questions** in technical interviews.
 | **Commit Hashes** | Keeps existing commit hashes untouched. | Rewrites commit hashes for replayed commits. |
 | **Traceability** | Easy to trace when a feature was integrated; easy to revert entire feature merge. | Commit history is simplified, but original context and timestamps can become misleading. |
 | **Conflict Resolution** | Resolve all conflicts once inside the merge commit. | You may have to resolve conflicts repeatedly for each individual commit being replayed. |
-
-#### Merge Visual:
-```text
-      C1 ─── C2 (feature)
-     /         \
-A ── B ───────── M (main: 3-way merge commit)
-```
-
-#### Rebase Visual:
-```text
-A ── B ── C1' ── C2' (feature commits rewritten sequentially on top of B)
-```
 
 > [!IMPORTANT]
 > **The Golden Rule of Rebasing:**
@@ -246,145 +117,20 @@ A ── B ── C1' ── C2' (feature commits rewritten sequentially on top 
 | **Scope** | Manipulates `HEAD`, Index, and Working Directory depending on flag. | Only targets specific commits to invert changes. |
 
 #### The 3 Modes of `git reset`:
-
-```bash
-git reset <mode> HEAD~1
-```
-
-| Mode | `HEAD` Moved? | Staging Area (Index) | Working Directory | Typical Use Case |
-|---|---|---|---|---|
-| `--soft` | Yes | **Preserved** (changes stay staged) | **Untouched** | Combine/squash last few commits into one, or fix commit message. |
-| `--mixed` *(Default)* | Yes | **Reset** (changes unstaged) | **Untouched** | You committed too early; want to re-stage files selectively. |
-| `--hard` | Yes | **Reset** (erased) | **Overwritten** (erased) | Completely discard uncommitted changes and recent commits. **(Dangerous!)** |
+- `--soft`: Moves `HEAD` only. Changes remain staged in the Index.
+- `--mixed` *(Default)*: Moves `HEAD` and resets Index. Changes remain in Working Directory as unstaged edits.
+- `--hard`: Moves `HEAD`, resets Index, and overwrites Working Directory. *(Permanently discards uncommitted work!)*
 
 ---
 
 ### Git Fetch vs Git Pull
 
 - **`git fetch`:** Downloads commits, files, and refs from the remote repository into your local `.git` object database. **It does NOT modify your working directory or merge into your local branch.**
-  - Updates remote tracking branches like `origin/main`.
-  - Completely safe to run at any time to inspect incoming changes before merging.
-- **`git pull`:** Equivalent to running `git fetch` followed immediately by `git merge FETCH_HEAD`.
-  - Automatically attempts to merge remote commits into your active local working branch.
-  - Can trigger merge conflicts while you are in the middle of other work.
-  - `git pull --rebase` runs `git fetch` followed by `git rebase` instead of merge.
+- **`git pull`:** Equivalent to running `git fetch` followed immediately by `git merge FETCH_HEAD`. Attempts to merge remote commits into your active local working branch automatically.
 
 ---
 
-### Git Switch & Restore vs Git Checkout
-
-In Git 2.23+, `git checkout` was split into two focused commands to reduce confusion:
-
-| Operation | Legacy Command | Modern Command (Recommended) |
-|---|---|---|
-| Switch branches | `git checkout <branch>` | `git switch <branch>` |
-| Create and switch branch | `git checkout -b <new-branch>` | `git switch -c <new-branch>` |
-| Discard working tree changes | `git checkout -- <file>` | `git restore <file>` |
-| Unstage a staged file | `git reset HEAD <file>` | `git restore --staged <file>` |
-
----
-
-## 6. Merge Conflicts: Anatomy & Resolution
-
-### Why Conflicts Occur
-A conflict occurs when Git attempts a 3-way merge or rebase and finds that **the exact same lines of code were modified differently** in both branches since their common ancestor commit.
-
-### Anatomy of Conflict Markers
-
-When a conflict occurs, Git marks the affected file with special delimiter lines:
-
-```text
-<<<<<<< HEAD
-const API_URL = "https://api.production.company.com/v1";
-=======
-const API_URL = "https://api.staging.company.com/v2";
->>>>>>> feature-auth
-```
-
-- `<<<<<<< HEAD`: Marks the start of changes from your **currently checked-out branch**.
-- `=======`: The separator between conflicting versions.
-- `>>>>>>> feature-auth`: Marks the end of changes from the **incoming branch being merged**.
-
-### Step-by-Step Resolution Process
-
-1. **Detect conflicting files:**
-   ```bash
-   git status
-   # Shows "both modified: config/api.js"
-   ```
-2. **Open the conflicting files and resolve:**
-   - Review both sides with teammates or code context.
-   - Edit the file: keep the correct code, remove unwanted code, and **delete all conflict markers** (`<<<<<<<`, `=======`, `>>>>>>>`).
-3. **Stage the resolved files:**
-   ```bash
-   git add config/api.js
-   ```
-4. **Complete the merge or rebase:**
-   ```bash
-   # If in a merge:
-   git commit -m "chore: resolve merge conflict in api config"
-
-   # If in a rebase:
-   git rebase --continue
-   ```
-5. **How to abort if things go wrong:**
-   ```bash
-   git merge --abort    # Reverts repository to state before git merge started
-   git rebase --abort   # Reverts repository to state before git rebase started
-   ```
-
----
-
-## 7. GitHub & Collaborative Workflows
-
-### GitHub vs Git
-
-- **Git:** The local command-line distributed version control system tool.
-- **GitHub:** A cloud-based hosting platform for Git repositories providing collaboration tools (Pull Requests, Issue tracking, Actions CI/CD, Project Boards, Releases).
-
-### Common Branching Workflows
-
-#### 1. GitHub Flow (Standard in Startups & Agile Teams)
-1. Branch off `main` with a descriptive name (`feat/user-login`, `fix/typo`).
-2. Make commits with clear, atomic messages.
-3. Open a **Pull Request (PR)** on GitHub early for discussion and review.
-4. Run automated tests (CI).
-5. Address peer review comments.
-6. Merge into `main` and deploy immediately.
-
-#### 2. Git Flow (Classic for Scheduled Releases)
-- `main`: Production-ready code only.
-- `develop`: Ongoing integration for the next release.
-- `feature/*`: Branched from `develop`, merged back to `develop`.
-- `release/*`: Branched from `develop` when preparing a release; merged to both `main` and `develop`.
-- `hotfix/*`: Branched directly from `main` to patch urgent production bugs; merged to both `main` and `develop`.
-
-### Conventional Commits Standard
-
-Many tech companies enforce structured commit messages:
-
-```text
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-Common types:
-- `feat`: A new feature for the user
-- `fix`: A bug fix
-- `docs`: Documentation changes only
-- `style`: Formatting, missing semi-colons (no code logic changes)
-- `refactor`: Refactoring code without adding features or fixing bugs
-- `test`: Adding or correcting tests
-- `chore`: Build tasks, package updates, tooling configurations
-
----
-
-## 8. Rapid Revision Sheet (20 High-Yield Questions)
-
-Answerable in under 30 seconds each:
+## 5. Rapid Revision Sheet (20 High-Yield Questions)
 
 | # | Question | 30-Second Model Answer |
 |---|---|---|
@@ -406,62 +152,43 @@ Answerable in under 30 seconds each:
 | **16** | What is `git cherry-pick`? | Applies the changes introduced by a specific single commit from one branch onto the current working branch. |
 | **17** | How does `.gitignore` work? | Specifies glob patterns of files/directories Git should ignore from tracking. Tracked files must be unstaged via `git rm --cached`. |
 | **18** | What does `git blame` do? | Annotates each line of a file with the author, timestamp, and commit hash of who last modified it. |
-| **19** | What is a Pull Request (PR)? | A GitHub/GitLab mechanism proposing changes from one branch into another, enabling code review, CI checks, and discussion. |
+| **19** | What is a Pull Request (PR)? | A GitHub mechanism proposing changes from one branch into another, enabling code review, CI checks, and discussion. |
 | **20** | Why use `git push --force-with-lease` instead of `--force`? | It only force-pushes if no one else has updated the remote branch in the meantime, preventing accidental overwrites. |
 
 ---
 
-## 9. Real-World Interview Scenarios & Drills
+## 6. Real-World Interview Scenarios & Drills
 
-### Scenario 1: "I accidentally committed an API secret or password. How do I fix it?"
-- **If not yet pushed:**
-  1. Remove secret from the file.
-  2. If it was the most recent commit:
-     ```bash
-     git add <file>
-     git commit --amend --no-edit
-     ```
-- **If already pushed to remote:**
-  1. **Immediately revoke / rotate the secret** (assume it is already compromised).
-  2. Use `git filter-repo` or BFG Repo-Cleaner to scrub the secret from all history, then force-push.
+### Scenario 1: Accidental Secret Leak
+```bash
+# If not yet pushed:
+git rm --cached .env
+echo ".env" >> .gitignore
+git commit --amend --no-edit
 
-### Scenario 2: "I accidentally ran `git reset --hard` and lost my work! Can I get it back?"
-- **Answer:** Yes! As long as the work was committed at least once:
-  1. Run `git reflog` (reference log records every movement of `HEAD` for 30–90 days).
-  2. Identify the commit hash right before the reset (e.g. `HEAD@{1}`).
-  3. Restore it:
-     ```bash
-     git reset --hard HEAD@{1}
-     # Or create a recovery branch:
-     git branch recovery-branch HEAD@{1}
-     ```
+# If already pushed: Rotate the secret immediately, then scrub history with git filter-repo.
+```
 
-### Scenario 3: "I started coding on `main` instead of creating a feature branch. I haven't committed yet. What do I do?"
-- **Answer:**
-  ```bash
-  # Option A (simplest): Git allows switching branches while keeping dirty working tree
-  git switch -c feature/my-new-feature
-  # All uncommitted files move directly to the new branch!
+### Scenario 2: Recovering from Accidental `git reset --hard`
+```bash
+# 1. Inspect HEAD history
+git reflog
+# 2. Restore to pre-reset commit
+git reset --hard HEAD@{1}
+```
 
-  # Option B (using stash):
-  git stash
-  git switch -c feature/my-new-feature
-  git stash pop
-  ```
-
-### Scenario 4: "I need a bugfix commit from branch `dev-2.0` into `production-1.0`, but not the other 20 commits."
-- **Answer:** Use `git cherry-pick`:
-  ```bash
-  git switch production-1.0
-  git cherry-pick <commit-hash-of-bugfix>
-  ```
+### Scenario 3: Cherry-Picking a Single Hotfix Commit
+```bash
+git switch main
+git cherry-pick <commit-hash-of-fix>
+```
 
 ---
 
-## 10. Traps That Cost Marks in Interviews
+## 7. Traps That Cost Marks in Interviews
 
-1. **Confusing Git with GitHub:** Treating them as synonyms in an interview reveals a lack of core tooling fundamentals. Always state: Git is the DVCS engine; GitHub is the hosting and collaboration platform.
-2. **Believing `git reset --hard` destroys everything:** Uncommitted changes that were never added to the index are permanently lost, but any changes that were committed once are recoverable via `git reflog`.
-3. **Explaining `.gitignore` without mentioning tracked files:** Adding an existing file to `.gitignore` does **not** stop Git from tracking it if it was already committed in the past. You must explicitly run `git rm --cached <file>`.
-4. **Blind `git push --force`:** Never recommend plain `--force` in an interview answer; always demonstrate senior hygiene by recommending `git push --force-with-lease`.
-5. **Saying Git stores diffs:** A very common misconception! VCS like SVN store file deltas/diffs; **Git stores snapshots of files as complete objects (blobs) organized in tree hierarchies**.
+1. **Confusing Git with GitHub:** Git is the local CLI DVCS engine; GitHub is the cloud platform for hosting and collaboration.
+2. **Assuming `git reset --hard` is always unrecoverable:** Committed work is recoverable via `git reflog`.
+3. **Explaining `.gitignore` without mentioning tracked files:** Adding an existing file to `.gitignore` does not ignore it until you run `git rm --cached`.
+4. **Blind `git push --force`:** Always use `git push --force-with-lease` in collaborative settings.
+5. **Believing Git stores diffs:** Git stores **snapshots** as SHA-addressed blobs in tree hierarchies, not line-by-line deltas.
