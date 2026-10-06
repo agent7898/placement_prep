@@ -1,11 +1,12 @@
 # Placement Preparation Workspace Guidelines
 
-This repository is a placement-preparation handbook organized into four categories:
+This repository is a placement-preparation handbook organized into five categories:
 
 - `Aptitude`
 - `coreCS`
 - `coreJava`
 - `systemArchitecture`
+- `techStack`
 
 ## Mandatory routing
 
@@ -34,3 +35,4 @@ Use the dominant category when the intent is clear. Ask one concise clarificatio
 - Core CS guidance: `.github/instructions/core-cs.instructions.md`
 - Core Java guidance: `.github/instructions/core-java.instructions.md`
 - System Architecture guidance: `.github/instructions/system-architecture.instructions.md`
+- Tech Stack guidance: `techStack/README.md`
