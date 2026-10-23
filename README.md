@@ -14,6 +14,7 @@ A comprehensive, structured repository of placement preparation notes, interview
 | **[Core Java](coreJava/README.md)** | Language & Standard Library | Syntax, OOP principles, [Java Collections Framework](coreJava/java_collections_framework.md), [OOP Checklist](coreJava/java_oops_checklist.md), streams, and runtime edge cases. |
 | **[System Architecture](systemArchitecture/README.md)** | High-Level & Low-Level Design | Functional/non-functional requirements, components, data flow, scaling, databases, and trade-offs. |
 | **[Tech Stack](techStack/README.md)** | Practical Developer Tooling & Stacks | **[Git & GitHub](techStack/Git%20%26%20Github/README.md)** (mental model, DAG internals, command reference, merge vs rebase, conflict drills, rapid revision). |
+| **[Mock Tests](mockTests/README.md)** | Weekly Timed OA Papers | Tiered papers (Tier 1: TCS NQT / Infosys / HCL pattern) with reviews, optimal solutions, and a scoreboard. |
 
 ---
 
